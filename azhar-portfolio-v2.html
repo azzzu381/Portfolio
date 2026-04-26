@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaik Hazaruddin | Senior Threat Researcher</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Syne:wght@400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #080810;
+  --bg2:     #0d0d1a;
+  --bg3:     #111122;
+  --border:  #1a1a2e;
+  --border2: #252540;
+  --green:   #00ff9d;
+  --orange:  #ff6b35;
+  --purple:  #8b5cf6;
+  --blue:    #38bdf8;
+  --yellow:  #fbbf24;
+  --red:     #f87171;
+  --text:    #e8e8f8;
+  --muted:   #4a4a6a;
+  --dim:     #1e1e36;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── GRID BACKGROUND ── */
+.grid-bg {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,157,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,157,0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none; z-index: 0;
+}
+
+/* scanlines */
+.scanlines {
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,20,0.15) 3px, rgba(0,0,20,0.15) 4px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 999;
+  padding: 0 56px;
+  height: 64px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(8,8,16,0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+}
+
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.nav-logo .g { color: var(--green); }
+.nav-logo .w { color: var(--text); }
+
+.nav-status {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--green);
+  background: rgba(0,255,157,0.08);
+  border: 1px solid rgba(0,255,157,0.2);
+  padding: 3px 10px; border-radius: 2px;
+}
+
+.pulse-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.nav-links { display:flex; gap:28px; list-style:none; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--green); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  padding: 100px 56px 80px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px; align-items: center;
+  max-width: 1280px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+}
+
+.eyebrow-line {
+  width: 32px; height: 1px; background: var(--green);
+}
+
+.eyebrow-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--green);
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(48px, 5.5vw, 76px);
+  font-weight: 800; line-height: 1.0;
+  letter-spacing: -3px;
+  margin-bottom: 8px;
+}
+
+.hero h1 .first { color: var(--text); }
+.hero h1 .last {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.2);
+}
+
+.hero-alias {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--green);
+  margin-bottom: 28px; letter-spacing: 1px;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 20px; letter-spacing: -0.5px;
+}
+
+.hero-title span { color: var(--orange); }
+
+.hero-desc {
+  font-size: 14px; color: var(--muted);
+  line-height: 1.85; margin-bottom: 36px;
+  max-width: 520px;
+}
+
+.hero-desc strong { color: var(--text); font-weight: 600; }
+
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  margin-bottom: 40px;
+}
+
+.meta-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+}
+
+.meta-item .icon { color: var(--green); }
+
+.hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-primary {
+  background: var(--green); color: #000;
+  padding: 13px 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  text-decoration: none; border: none; cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  transition: all 0.2s;
+}
+.btn-primary:hover { background: #00e68a; transform: translateY(-2px); }
+
+.btn-ghost {
+  border: 1px solid var(--border2); color: var(--muted);
+  padding: 13px 30px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 1.5px;
+  text-transform: uppercase; text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+/* ── TERMINAL CARD ── */
+.terminal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 1px var(--green) inset;
+}
+
+.terminal::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green) 30%, var(--green) 70%, transparent);
+  opacity: 0.6;
+}
+
+.terminal-bar {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,0,0,0.2);
+}
+
+.tdot { width: 10px; height: 10px; border-radius: 50%; }
+.tdot.r { background: #ff5f57; }
+.tdot.y { background: #febc2e; }
+.tdot.g { background: #28c840; }
+
+.t-fname {
+  margin-left: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+}
+
+.t-body {
+  padding: 24px 22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; line-height: 2;
+}
+
+.t-line { display: block; }
+.tp { color: var(--green); }
+.th { color: var(--muted); }
+.tk { color: var(--blue); }
+.tv { color: var(--orange); }
+.tc { color: var(--muted); font-style: italic; }
+.tg { color: var(--green); opacity: 0.6; }
+.ts { color: var(--purple); }
+
+.cursor-blink {
+  display: inline-block; width: 8px; height: 14px;
+  background: var(--green); vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── WRAPPER ── */
+.wrapper { max-width: 1280px; margin: 0 auto; padding: 0 56px; position: relative; z-index: 1; }
+
+/* ── SECTION ── */
+.section { padding: 96px 0; }
+.section-inner { max-width: 1280px; margin: 0 auto; padding: 0 56px; position: relative; z-index: 1; }
+
+.s-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.s-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.s-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800; letter-spacing: -1.5px;
+  margin-bottom: 48px; line-height: 1.1;
+}
+
+.s-title em { color: var(--green); font-style: normal; }
+
+hr.divider { border: none; border-top: 1px solid var(--border); margin: 0 56px; }
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--border);
+  background: var(--border);
+  gap: 1px;
+}
+
+.stat-box {
+  background: var(--bg2);
+  padding: 36px 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.25s;
+}
+.stat-box:hover { background: var(--bg3); }
+
+.stat-box::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--green); transform: scaleX(0); transition: 0.3s;
+}
+.stat-box:hover::after { transform: scaleX(1); }
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 44px; font-weight: 800;
+  color: var(--green); line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label-s {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.stat-sub-s { font-size: 12px; color: var(--muted); }
+
+/* ── SKILLS ── */
+.skills-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+}
+
+.skill-group {
+  background: var(--bg2); padding: 32px;
+}
+
+.skill-group-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.skill-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px; gap: 16px;
+}
+
+.skill-name {
+  font-size: 13px; color: var(--text);
+  white-space: nowrap; min-width: 140px;
+}
+
+.skill-bar-wrap {
+  flex: 1; height: 4px;
+  background: var(--dim); border-radius: 2px; overflow: hidden;
+}
+
+.skill-bar {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, var(--green), #00cc7a);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.skill-bar.blue { background: linear-gradient(90deg, var(--blue), #0ea5e9); }
+.skill-bar.purple { background: linear-gradient(90deg, var(--purple), #7c3aed); }
+.skill-bar.orange { background: linear-gradient(90deg, var(--orange), #ea580c); }
+
+.skill-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  min-width: 32px; text-align: right;
+}
+
+/* tags */
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.5px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.tag:hover { border-color: var(--green); color: var(--green); }
+.tag.green { border-color: rgba(0,255,157,0.3); color: var(--green); background: rgba(0,255,157,0.05); }
+.tag.blue { border-color: rgba(56,189,248,0.3); color: var(--blue); background: rgba(56,189,248,0.05); }
+.tag.purple { border-color: rgba(139,92,246,0.3); color: var(--purple); background: rgba(139,92,246,0.05); }
+.tag.orange { border-color: rgba(255,107,53,0.3); color: var(--orange); background: rgba(255,107,53,0.05); }
+
+/* ── DETECTION INVENTORY ── */
+.detect-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.detect-card {
+  background: var(--bg2); padding: 32px 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.detect-card:hover { background: var(--bg3); }
+
+.detect-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.detect-card.g::before { background: var(--green); }
+.detect-card.b::before { background: var(--blue); }
+.detect-card.o::before { background: var(--orange); }
+.detect-card.p::before { background: var(--purple); }
+
+.detect-sym {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800;
+  margin-bottom: 12px; display: block;
+}
+.detect-card.g .detect-sym { color: var(--green); }
+.detect-card.b .detect-sym { color: var(--blue); }
+.detect-card.o .detect-sym { color: var(--orange); }
+.detect-card.p .detect-sym { color: var(--purple); }
+
+.detect-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.detect-desc {
+  font-size: 12px; color: var(--muted);
+  line-height: 1.7; margin-bottom: 20px;
+}
+
+.detect-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 48px; font-weight: 800;
+  line-height: 1;
+}
+.detect-card.g .detect-num { color: var(--green); }
+.detect-card.b .detect-num { color: var(--blue); }
+.detect-card.o .detect-num { color: var(--orange); }
+.detect-card.p .detect-num { color: var(--purple); }
+
+.detect-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted); letter-spacing: 1px;
+}
+
+/* ── MITRE ── */
+.mitre-wrap {
+  border: 1px solid var(--border);
+  background: var(--bg2); overflow: hidden;
+}
+
+.mitre-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.mitre-header-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 1px; color: var(--muted);
+}
+
+.mitre-total {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--green);
+}
+
+.mitre-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--border); padding: 1px;
+}
+
+.mitre-cell {
+  background: var(--bg); padding: 20px 16px;
+  text-align: center; transition: background 0.2s;
+  cursor: default; position: relative;
+}
+.mitre-cell:hover { background: var(--bg3); }
+
+.mitre-tactic {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.mitre-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800; color: var(--green);
+  line-height: 1; margin-bottom: 4px;
+}
+
+.mitre-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--muted);
+}
+
+/* ── PROJECTS ── */
+.projects-list {
+  display: flex; flex-direction: column;
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.project-row {
+  background: var(--bg2); padding: 28px 32px;
+  display: grid; grid-template-columns: 52px 1fr auto;
+  gap: 24px; align-items: start;
+  transition: background 0.2s; cursor: default;
+}
+.project-row:hover { background: var(--bg3); }
+
+.proj-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px; font-weight: 800;
+  color: var(--dim); line-height: 1;
+  padding-top: 4px;
+}
+
+.proj-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.proj-role {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--green); margin-bottom: 10px;
+}
+
+.proj-desc {
+  font-size: 13px; color: var(--muted); line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.proj-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.severity-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 1px;
+  padding: 5px 10px; border: 1px solid;
+  text-transform: uppercase; white-space: nowrap;
+  align-self: flex-start; margin-top: 6px;
+}
+.sb-high { border-color: var(--orange); color: var(--orange); }
+.sb-critical { border-color: var(--red); color: var(--red); }
+.sb-medium { border-color: var(--purple); color: var(--purple); }
+.sb-research { border-color: var(--blue); color: var(--blue); }
+.sb-governance { border-color: var(--yellow); color: var(--yellow); }
+
+/* ── TOOLS ── */
+.tools-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.tool-item {
+  background: var(--bg2); padding: 24px 28px;
+  display: flex; gap: 18px; align-items: flex-start;
+  transition: background 0.2s;
+}
+.tool-item:hover { background: var(--bg3); }
+
+.tool-ico { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.tool-n { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.tool-d { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+/* ── EXPERIENCE TIMELINE ── */
+.timeline {
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  padding: 40px;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute; top: 40px; bottom: 40px; left: 72px;
+  width: 1px; background: var(--border);
+}
+
+.tl-item {
+  display: grid; grid-template-columns: 72px 1fr;
+  gap: 32px; margin-bottom: 40px;
+}
+.tl-item:last-child { margin-bottom: 0; }
+
+.tl-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1px;
+  color: var(--muted); text-align: right;
+  padding-top: 4px;
+  position: relative;
+}
+
+.tl-date::after {
+  content: '';
+  position: absolute; right: -20px; top: 8px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.tl-content {}
+.tl-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  margin-bottom: 4px;
+}
+.tl-org {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--green);
+  letter-spacing: 1px; margin-bottom: 14px;
+}
+.tl-points { padding-left: 0; list-style: none; }
+.tl-points li {
+  font-size: 13px; color: var(--muted);
+  padding: 4px 0 4px 20px; position: relative;
+  line-height: 1.6;
+}
+.tl-points li::before {
+  content: '→'; color: var(--green);
+  position: absolute; left: 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.tl-points li strong { color: var(--text); }
+
+/* ── CERTS ── */
+.certs-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.cert-card {
+  background: var(--bg2); padding: 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.cert-card:hover { background: var(--bg3); }
+
+.cert-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
+  background: var(--green);
+}
+
+.cert-card.blue::before { background: var(--blue); }
+.cert-card.purple::before { background: var(--purple); }
+.cert-card.orange::before { background: var(--orange); }
+.cert-card.yellow::before { background: var(--yellow); }
+
+.cert-ico { font-size: 28px; margin-bottom: 12px; display: block; }
+.cert-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700;
+  margin-bottom: 4px; line-height: 1.3;
+}
+.cert-org {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted); letter-spacing: 0.5px;
+}
+
+/* ── AWARDS ── */
+.awards-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.award-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 28px; position: relative;
+  overflow: hidden; transition: all 0.2s;
+}
+.award-card:hover { border-color: var(--green); }
+
+.award-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  opacity: 0; transition: 0.2s;
+}
+.award-card:hover::after { opacity: 1; }
+
+.award-ico { font-size: 32px; margin-bottom: 14px; display: block; }
+.award-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700; margin-bottom: 4px;
+}
+.award-from {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted); letter-spacing: 0.5px;
+}
+
+/* ── CONTACT ── */
+.contact-wrap {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+}
+
+.contact-card {
+  background: var(--bg2); padding: 36px;
+  transition: background 0.2s;
+}
+.contact-card:hover { background: var(--bg3); }
+
+.contact-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.contact-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 700; color: var(--text);
+  text-decoration: none; display: block;
+  transition: color 0.2s;
+}
+.contact-val:hover { color: var(--green); }
+
+/* ── STATUS BAR ── */
+.status-bar {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  padding: 18px 28px;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 16px;
+  margin-bottom: 32px;
+}
+
+.sb-item {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+}
+
+.sb-dot { width: 7px; height: 7px; border-radius: 50%; }
+.sb-dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+.sb-dot.off { background: var(--muted); }
+
+.sb-val { color: var(--text); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 56px;
+  max-width: 1280px; margin: 0 auto;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 20px;
+  position: relative; z-index: 1;
+}
+
+.footer-brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -1px; color: var(--green);
+}
+
+.footer-info {
+  font-size: 12px; color: var(--muted); margin-top: 4px;
+}
+
+.footer-links { display: flex; gap: 20px; }
+.footer-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--green); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+.fd1 { animation-delay: 0.1s; }
+.fd2 { animation-delay: 0.25s; }
+.fd3 { animation-delay: 0.4s; }
+.fd4 { animation-delay: 0.55s; }
+.fd5 { animation-delay: 0.7s; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 900px) {
+  nav { padding: 0 24px; }
+  .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; }
+  .stats-strip { grid-template-columns: repeat(2, 1fr); }
+  .detect-grid { grid-template-columns: repeat(2, 1fr); }
+  .mitre-grid { grid-template-columns: repeat(3, 1fr); }
+  .skills-layout { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .certs-grid { grid-template-columns: repeat(2, 1fr); }
+  .awards-grid { grid-template-columns: 1fr; }
+  .contact-wrap { grid-template-columns: 1fr; }
+  .section-inner { padding: 0 24px; }
+  hr.divider { margin: 0 24px; }
+  footer { padding: 32px 24px; }
+  .timeline::before { left: 56px; }
+  .tl-item { grid-template-columns: 56px 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="scanlines"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="nav-logo"><span class="g">AZ</span><span class="w">Ops</span></div>
+    <div class="nav-status"><div class="pulse-dot"></div>AVAILABLE</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">Profile</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#detections">Detections</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certs">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<div id="about" style="position:relative;z-index:1;">
+<div class="hero">
+  <div>
+    <div class="hero-eyebrow fade-up fd1">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Senior Threat Researcher · 4.3 Years</span>
+    </div>
+
+    <h1 class="fade-up fd2">
+      <span class="first">Shaik<br>Hazar</span><span class="last">uddin</span>
+    </h1>
+
+    <div class="hero-alias fade-up fd2">// goes by Azhar</div>
+
+    <div class="hero-title fade-up fd3">
+      Threat Detection · Malware Analysis · <span>Incident Response</span>
+    </div>
+
+    <p class="hero-desc fade-up fd3">
+      Senior Threat Researcher with <strong>4.3+ years</strong> of experience in
+      <strong>Threat Detection, Malware Analysis, and Incident Response</strong>,
+      specializing in <strong>Microsoft Defender, Splunk, and Azure Data Explorer</strong>.
+      Proficient in reverse engineering malware using <strong>Ghidra, IDA Pro, and CyberChef</strong>,
+      building custom detection rules, dashboards, and automated workflows. Skilled in
+      <strong>email/URL phishing investigations</strong>, insider threat detection, and SOC operations.
+      Adept at applying <strong>MITRE ATT&CK, Cyber Kill Chain</strong>, and behavioral analytics.
+    </p>
+
+    <div class="hero-meta fade-up fd4">
+      <div class="meta-item"><span class="icon">◎</span> Hyderabad, India</div>
+      <div class="meta-item"><span class="icon">◎</span> LTIMindtree · July 2022–Present</div>
+      <div class="meta-item"><span class="icon">◎</span> CEH Certified</div>
+      <div class="meta-item"><span class="icon">◎</span> Open to Senior Roles</div>
+    </div>
+
+    <div class="hero-btns fade-up fd5">
+      <a href="mailto:azzu381@gmail.com" class="btn-primary">Contact Me →</a>
+      <a href="https://www.linkedin.com/in/shaikhazaruddin/" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+    </div>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="terminal fade-up fd3">
+    <div class="terminal-bar">
+      <div class="tdot r"></div><div class="tdot y"></div><div class="tdot g"></div>
+      <span class="t-fname">threat_profile.json — azhar@threatops</span>
+    </div>
+    <div class="t-body">
+      <span class="t-line"><span class="tp">$</span> <span class="th">cat</span> <span class="ts">profile.json</span></span>
+      <span class="t-line" style="margin-top:10px;"><span class="tg">{</span></span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"analyst"</span>: <span class="tv">"Shaik Hazaruddin (Azhar)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"role"</span>: <span class="tv">"Senior Threat Researcher"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"employer"</span>: <span class="tv">"LTIMindtree, Hyderabad"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"experience"</span>: <span class="tv">"4.3+ years"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"certification"</span>: <span class="tv">"CEH (EC-Council)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"education"</span>: <span class="tv">"B.Tech – KVSR, 2020"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"specialization"</span>: [</span>
+      <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">"Malware Analysis (Win + Android)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">"Reverse Engineering (Ghidra, IDA)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">"Detection Engineering (KQL/Sigma)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">"Threat Hunting (MITRE ATT&CK)"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">"Incident Response (NIST Lifecycle)"</span></span>
+      <span class="t-line">&nbsp;&nbsp;],</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"platforms"</span>: <span class="tv">"MDE · MDO · MDI · Sentinel · Splunk"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"fp_reduction"</span>: <span class="tv">"25% improvement"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"awards"</span>: <span class="tv">"A-Team(x2) · Best Employee · SuperCrew"</span>,</span>
+      <span class="t-line">&nbsp;&nbsp;<span class="tk">"status"</span>: <span style="color:var(--green);">"open_to_opportunities"</span></span>
+      <span class="t-line"><span class="tg">}</span></span>
+      <span class="t-line" style="margin-top:10px;"><span class="tp">$</span> <span class="cursor-blink"></span></span>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ STATS ══════ -->
+<div class="wrapper" style="padding-top:80px; padding-bottom:80px;">
+  <div class="stats-strip">
+    <div class="stat-box">
+      <div class="stat-label-s">Experience</div>
+      <div class="stat-num" data-target="4" data-suffix=".3+">0</div>
+      <div class="stat-sub-s">Years in SOC operations</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label-s">FP Reduction</div>
+      <div class="stat-num" data-target="25" data-suffix="%">0</div>
+      <div class="stat-sub-s">Monitoring via Splunk & ADX</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label-s">Certifications</div>
+      <div class="stat-num" data-target="7">0</div>
+      <div class="stat-sub-s">CEH + 6 specialized certs</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label-s">Awards Won</div>
+      <div class="stat-num" data-target="6" data-suffix="+">0</div>
+      <div class="stat-sub-s">A-Team, Best Employee & more</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label-s">Team Size Led</div>
+      <div class="stat-num" data-target="12">0</div>
+      <div class="stat-sub-s">M365D Operations project</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ SKILLS ══════ -->
+<div id="skills" class="section">
+<div class="section-inner">
+  <div class="s-label">// Technical Arsenal</div>
+  <h2 class="s-title">Skills & <em>Expertise</em></h2>
+
+  <div class="skills-layout">
+    <div class="skill-group">
+      <div class="skill-group-title">SOC & Threat Operations</div>
+      <div class="skill-row"><span class="skill-name">Threat Hunting</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="95"></div></div><span class="skill-pct">95%</span></div>
+      <div class="skill-row"><span class="skill-name">Incident Response</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="92"></div></div><span class="skill-pct">92%</span></div>
+      <div class="skill-row"><span class="skill-name">Email/URL Analysis</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="95"></div></div><span class="skill-pct">95%</span></div>
+      <div class="skill-row"><span class="skill-name">Insider Threat Inv.</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="88"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-row"><span class="skill-name">Detection Engineering</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="90"></div></div><span class="skill-pct">90%</span></div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">Malware Analysis</div>
+      <div class="skill-row"><span class="skill-name">Reverse Engineering</span><div class="skill-bar-wrap"><div class="skill-bar blue" data-w="88"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-row"><span class="skill-name">Android APK Analysis</span><div class="skill-bar-wrap"><div class="skill-bar blue" data-w="85"></div></div><span class="skill-pct">85%</span></div>
+      <div class="skill-row"><span class="skill-name">Memory Forensics</span><div class="skill-bar-wrap"><div class="skill-bar blue" data-w="82"></div></div><span class="skill-pct">82%</span></div>
+      <div class="skill-row"><span class="skill-name">Dynamic Analysis</span><div class="skill-bar-wrap"><div class="skill-bar blue" data-w="90"></div></div><span class="skill-pct">90%</span></div>
+      <div class="skill-row"><span class="skill-name">IOC Extraction</span><div class="skill-bar-wrap"><div class="skill-bar blue" data-w="93"></div></div><span class="skill-pct">93%</span></div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">SIEM & Querying</div>
+      <div class="skill-row"><span class="skill-name">KQL (Azure ADX)</span><div class="skill-bar-wrap"><div class="skill-bar purple" data-w="92"></div></div><span class="skill-pct">92%</span></div>
+      <div class="skill-row"><span class="skill-name">Splunk SPL</span><div class="skill-bar-wrap"><div class="skill-bar purple" data-w="88"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-row"><span class="skill-name">Microsoft Sentinel</span><div class="skill-bar-wrap"><div class="skill-bar purple" data-w="90"></div></div><span class="skill-pct">90%</span></div>
+      <div class="skill-row"><span class="skill-name">Alert Tuning</span><div class="skill-bar-wrap"><div class="skill-bar purple" data-w="92"></div></div><span class="skill-pct">92%</span></div>
+      <div class="skill-row"><span class="skill-name">Dashboard Creation</span><div class="skill-bar-wrap"><div class="skill-bar purple" data-w="85"></div></div><span class="skill-pct">85%</span></div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-title">Frameworks & Governance</div>
+      <div class="skill-row"><span class="skill-name">MITRE ATT&CK</span><div class="skill-bar-wrap"><div class="skill-bar orange" data-w="93"></div></div><span class="skill-pct">93%</span></div>
+      <div class="skill-row"><span class="skill-name">Cyber Kill Chain</span><div class="skill-bar-wrap"><div class="skill-bar orange" data-w="90"></div></div><span class="skill-pct">90%</span></div>
+      <div class="skill-row"><span class="skill-name">NIST IR Lifecycle</span><div class="skill-bar-wrap"><div class="skill-bar orange" data-w="88"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-row"><span class="skill-name">Risk Assessment</span><div class="skill-bar-wrap"><div class="skill-bar orange" data-w="82"></div></div><span class="skill-pct">82%</span></div>
+      <div class="skill-row"><span class="skill-name">ISO 27001/NIST CSF</span><div class="skill-bar-wrap"><div class="skill-bar orange" data-w="75"></div></div><span class="skill-pct">75%</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;">
+    <div class="skill-group-title" style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">Full Technology Stack</div>
+    <div class="tag-cloud">
+      <span class="tag green">Ghidra</span>
+      <span class="tag green">IDA Pro</span>
+      <span class="tag green">CyberChef</span>
+      <span class="tag green">Volatility</span>
+      <span class="tag blue">JADX</span>
+      <span class="tag blue">APKTool</span>
+      <span class="tag blue">Frida</span>
+      <span class="tag blue">Burp Suite</span>
+      <span class="tag purple">MDE</span>
+      <span class="tag purple">MDO</span>
+      <span class="tag purple">MDI</span>
+      <span class="tag purple">MCAS</span>
+      <span class="tag purple">Purview DLP</span>
+      <span class="tag purple">Microsoft Sentinel</span>
+      <span class="tag orange">KQL</span>
+      <span class="tag orange">Splunk SPL</span>
+      <span class="tag orange">PowerShell</span>
+      <span class="tag orange">Python</span>
+      <span class="tag orange">Power Automate</span>
+      <span class="tag">PEStudio</span>
+      <span class="tag">Any.run</span>
+      <span class="tag">VirusTotal</span>
+      <span class="tag">Sigma</span>
+      <span class="tag">YARA</span>
+      <span class="tag">AutoGen</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ DETECTIONS ══════ -->
+<div id="detections" class="section">
+<div class="section-inner">
+  <div class="s-label">// Detection Inventory</div>
+  <h2 class="s-title">What I Build to <em>Hunt Threats</em></h2>
+
+  <div class="status-bar">
+    <div class="sb-item"><div class="sb-dot on"></div>Primary Platform: <span class="sb-val">Microsoft Defender XDR</span></div>
+    <div class="sb-item"><div class="sb-dot on"></div>SIEM: <span class="sb-val">Sentinel + Splunk + Azure ADX</span></div>
+    <div class="sb-item"><div class="sb-dot on"></div>FP Reduction: <span class="sb-val">25% improvement achieved</span></div>
+    <div class="sb-item"><div class="sb-dot off"></div>Status: <span class="sb-val">Active · Production SOC</span></div>
+  </div>
+
+  <div class="detect-grid">
+    <div class="detect-card b">
+      <span class="detect-sym">⬡</span>
+      <div class="detect-name">KQL Hunt Queries</div>
+      <div class="detect-desc">Threat hunting queries across DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents in Microsoft Defender XDR and Azure Data Explorer. Covering LOLBin abuse, lateral movement, LSASS dumping, C2 beaconing, and data exfiltration patterns.</div>
+      <div class="detect-num">35<span class="detect-unit">+ rules</span></div>
+    </div>
+    <div class="detect-card o">
+      <span class="detect-sym">◈</span>
+      <div class="detect-name">YARA Rules</div>
+      <div class="detect-desc">Generic and heuristic YARA signatures for Windows PE and Android APK malware families. Built for packers, droppers, banking trojans, ransomware, and RATs. Evasion-resilient partial match conditions. Delivered IOC-based signature updates to Microsoft Defender.</div>
+      <div class="detect-num">25<span class="detect-unit">+ rules</span></div>
+    </div>
+    <div class="detect-card g">
+      <span class="detect-sym">σ</span>
+      <div class="detect-name">Sigma + Regex Rules</div>
+      <div class="detect-desc">MITRE ATT&CK mapped Sigma rules for LOLBin detection, PowerShell abuse, scheduled task persistence, and process injection. Regex-based detection rules in Microsoft Defender for Office for phishing/spam filtering — custom tuned for zero-day threats.</div>
+      <div class="detect-num">20<span class="detect-unit">+ rules</span></div>
+    </div>
+    <div class="detect-card p">
+      <span class="detect-sym">⬟</span>
+      <div class="detect-name">Android Signatures</div>
+      <div class="detect-desc">APK-level detection signatures targeting banking trojans, overlay attack patterns, accessibility service abuse, and dropper behavior. Built using dangerous permission combinations, suspicious API call sequences, hardcoded C2 patterns, and DEX-level behavioral indicators.</div>
+      <div class="detect-num">15<span class="detect-unit">+ rules</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ MITRE ══════ -->
+<div class="section">
+<div class="section-inner">
+  <div class="s-label">// MITRE ATT&CK Coverage</div>
+  <h2 class="s-title">Adversary <em>Tactic Coverage</em></h2>
+
+  <div class="mitre-wrap">
+    <div class="mitre-header">
+      <span class="mitre-header-title">MITRE ATT&CK Enterprise Framework · Detection Coverage</span>
+      <span class="mitre-total">82+ techniques mapped</span>
+    </div>
+    <div class="mitre-grid">
+      <div class="mitre-cell"><div class="mitre-tactic">Initial Access</div><div class="mitre-num">8</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Execution</div><div class="mitre-num">10</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Persistence</div><div class="mitre-num">9</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Priv. Escalation</div><div class="mitre-num">7</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Defense Evasion</div><div class="mitre-num">12</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Credential Access</div><div class="mitre-num">8</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Discovery</div><div class="mitre-num">9</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Lateral Movement</div><div class="mitre-num">6</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Collection</div><div class="mitre-num">7</div><div class="mitre-sub">techniques</div></div>
+      <div class="mitre-cell"><div class="mitre-tactic">Exfiltration</div><div class="mitre-num">6</div><div class="mitre-sub">techniques</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ PROJECTS ══════ -->
+<div id="projects" class="section">
+<div class="section-inner">
+  <div class="s-label">// Investigations & Projects</div>
+  <h2 class="s-title">Real Work. <em>Real Impact.</em></h2>
+
+  <div class="projects-list">
+    <div class="project-row">
+      <div class="proj-num">01</div>
+      <div>
+        <div class="proj-title">M365D Operations & Incident Grading</div>
+        <div class="proj-role">Security Operations Analyst · Team Size: 12</div>
+        <div class="proj-desc">Investigated and triaged security alerts from OATP, AATP, MCAS, and MTP to identify advanced threats across enterprise environment. Mapped all incidents to MITRE ATT&CK techniques to strengthen adversary detection coverage. Created and deployed KQL-based detection rules that meaningfully enhanced SOC alert accuracy and reduced false positives across the platform.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">MDE</span><span class="proj-tag">MCAS</span><span class="proj-tag">MTP</span>
+          <span class="proj-tag">KQL</span><span class="proj-tag">MITRE ATT&CK</span><span class="proj-tag">Alert Triage</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-critical">Enterprise</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">02</div>
+      <div>
+        <div class="proj-title">Malware Analysis Team</div>
+        <div class="proj-role">Malware Analyst · Team Size: 6</div>
+        <div class="proj-desc">Performed static and dynamic malware analysis using Ghidra, IDA Pro, JADX, and APKTool — extracting IOCs and identifying obfuscation techniques and DEX-level malicious behaviors in Android samples. Enhanced Microsoft Defender detections by updating endpoint and mobile threat signatures. Produced detailed technical reports with actionable remediation guidance for security teams.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Ghidra</span><span class="proj-tag">IDA Pro</span><span class="proj-tag">JADX</span>
+          <span class="proj-tag">APKTool</span><span class="proj-tag">Android</span><span class="proj-tag">IOC Extraction</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-high">Malware</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">03</div>
+      <div>
+        <div class="proj-title">Email Security & Anti-Phishing Team</div>
+        <div class="proj-role">Email Security Analyst</div>
+        <div class="proj-desc">Investigated phishing and spam campaigns, performing deep analysis of malicious URLs, attachments, and sender patterns. Built and maintained domain/IP blacklists to proactively block identified malicious infrastructure at scale. Enhanced detection logic across email gateway to improve phishing/spam filtering accuracy and reduce user compromise attempts organization-wide.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">MDO</span><span class="proj-tag">SPF/DKIM/DMARC</span><span class="proj-tag">URL Analysis</span>
+          <span class="proj-tag">Header Analysis</span><span class="proj-tag">Blacklisting</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-high">Phishing</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">04</div>
+      <div>
+        <div class="proj-title">Threat Hunting & Detection Engineering</div>
+        <div class="proj-role">Threat Hunter · Detection Engineer</div>
+        <div class="proj-desc">Led proactive, hypothesis-driven threat hunting aligned with MITRE ATT&CK framework to detect lateral movement, credential dumping, and data exfiltration across enterprise environments. Correlated Windows Event Logs, Firewall, DNS, Proxy, and EDR telemetry. Developed and optimized custom KQL/SPL queries to uncover stealthy attacker TTPs and reduce false positives. Performed deep-dive root cause analysis on suspicious activities improving detection visibility beyond traditional alert-based monitoring.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">KQL</span><span class="proj-tag">SPL</span><span class="proj-tag">MITRE ATT&CK</span>
+          <span class="proj-tag">Event Logs</span><span class="proj-tag">EDR</span><span class="proj-tag">Hypothesis Hunting</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-critical">Hunting</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">05</div>
+      <div>
+        <div class="proj-title">ML-based Threat Agent Development</div>
+        <div class="proj-role">Threat Research Engineer</div>
+        <div class="proj-desc">Designed and trained ML models for alert prioritization to minimize false positives in SOC operations. Integrated ML-driven threat scoring into SOC workflows to support faster analyst decision-making. Collaborated with data scientists and security engineers to optimize ML pipelines for real-time threat detection and response efficiency improvement.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">ML Models</span><span class="proj-tag">Alert Prioritization</span>
+          <span class="proj-tag">AutoGen</span><span class="proj-tag">Python</span><span class="proj-tag">Real-time Detection</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-research">Research</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">06</div>
+      <div>
+        <div class="proj-title">Cyber Risk Assessment & Governance</div>
+        <div class="proj-role">Risk Analyst · Security Governance</div>
+        <div class="proj-desc">Conducted qualitative cyber risk assessments by identifying assets, threats, and vulnerabilities — evaluating likelihood and business impact to determine risk severity. Created and maintained a risk register documenting risk ratings, ownership, and treatment decisions aligned with business priorities. Mapped high-risk findings to security controls and governance policies enabling risk-based prioritization and measurable risk reduction aligned with NIST CSF and ISO 27001/27005.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Risk Register</span><span class="proj-tag">NIST CSF</span><span class="proj-tag">ISO 27001</span>
+          <span class="proj-tag">BIA</span><span class="proj-tag">Risk Treatment</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-governance">Governance</div>
+    </div>
+
+    <div class="project-row">
+      <div class="proj-num">07</div>
+      <div>
+        <div class="proj-title">MDO Enterprise Security</div>
+        <div class="proj-role">Email Security Specialist · MDO</div>
+        <div class="proj-desc">Created and tuned regex-based detection rules in Microsoft Defender for Office to block phishing and spam at enterprise scale. Identified and blocked malicious domains, URLs, and IPs targeting enterprise users. Continuously fine-tuned detection logic to adapt to evolving email-based attack techniques including BEC, AiTM, and spear phishing campaigns.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">MDO</span><span class="proj-tag">Regex</span><span class="proj-tag">BEC</span>
+          <span class="proj-tag">AiTM</span><span class="proj-tag">Enterprise</span>
+        </div>
+      </div>
+      <div class="severity-badge sb-medium">Email Sec</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ TOOLS ══════ -->
+<div class="section">
+<div class="section-inner">
+  <div class="s-label">// Tool Stack</div>
+  <h2 class="s-title">How I <em>Analyze & Hunt</em></h2>
+
+  <div class="tools-grid">
+    <div class="tool-item"><span class="tool-ico">🔬</span><div><div class="tool-n">Ghidra + IDA Pro</div><div class="tool-d">Disassembly & decompilation of Windows PE malware and Android native .so libraries. Primary static analysis tools for reverse engineering.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">🍳</span><div><div class="tool-n">CyberChef</div><div class="tool-d">Data transformation, decoding, and IOC extraction from malware samples. Essential for decrypting C2 communications and obfuscated strings.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">📱</span><div><div class="tool-n">JADX + APKTool</div><div class="tool-d">Android APK decompilation to Java and Smali disassembly for static analysis of Android malware, DEX file analysis, and permission review.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">⚡</span><div><div class="tool-n">Frida</div><div class="tool-d">Dynamic instrumentation for Android and Windows — API hooking, SSL pinning bypass, and runtime behavior tracing during dynamic malware analysis.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">🧠</span><div><div class="tool-n">Volatility</div><div class="tool-d">Memory forensics — process analysis, DLL injection detection, credential extraction from memory dumps, and rootkit detection.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">🛡️</span><div><div class="tool-n">Microsoft Defender XDR</div><div class="tool-d">MDE, MDO, MDI, MCAS — primary platform for threat hunting, incident response, and detection rule deployment in production SOC.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">📊</span><div><div class="tool-n">Splunk + Azure ADX</div><div class="tool-d">Log correlation, dashboard creation, alert tuning, and custom detection rule development using SPL and KQL across enterprise telemetry.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">🌐</span><div><div class="tool-n">Burp Suite</div><div class="tool-d">HTTP/HTTPS traffic interception for C2 communication analysis during Android and web malware dynamic analysis after SSL pinning bypass via Frida.</div></div></div>
+    <div class="tool-item"><span class="tool-ico">⚙️</span><div><div class="tool-n">Power Automate + Python</div><div class="tool-d">Automated workflows for escalation, reporting efficiency, and SOC process automation. Python scripting for custom tool development and ML integration.</div></div></div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ EXPERIENCE ══════ -->
+<div class="section">
+<div class="section-inner">
+  <div class="s-label">// Professional Experience</div>
+  <h2 class="s-title">Career <em>Timeline</em></h2>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Jul 2022<br>Present</div>
+      <div class="tl-content">
+        <div class="tl-title">Cybersecurity Analyst: SOC Operations & Threat Detection</div>
+        <div class="tl-org">LTIMINDTREE · HYDERABAD, INDIA · 4.3+ YEARS</div>
+        <ul class="tl-points">
+          <li>Conducted <strong>Threat Hunting, Malware Analysis, and Incident Response</strong> in a 24/7 SOC environment across enterprise clients.</li>
+          <li>Investigated phishing and spam emails, analyzing <strong>headers, URLs, IPs, and attachments</strong> to detect malicious content at scale.</li>
+          <li>Performed <strong>reverse engineering of malware</strong> (EXEs, macros, PDFs) using Ghidra and CyberChef, delivering IOC-based signature updates to Defender.</li>
+          <li>Designed and fine-tuned <strong>custom detection rules (Regex/KQL)</strong> for zero-day threats and data exfiltration patterns in production environment.</li>
+          <li>Monitored logs and correlated events in Splunk & Azure Data Explorer, achieving <strong>25% reduction in false positives</strong>.</li>
+          <li>Created <strong>automated workflows with Power Automate</strong>, improving escalation and reporting efficiency across the team.</li>
+          <li>Collaborated with cross-functional teams for escalations, <strong>insider threat investigations</strong>, and malware intelligence sharing.</li>
+          <li>Authored <strong>SOPs, incident reports, and detection playbooks</strong>, ensuring process consistency and operational maturity.</li>
+          <li>Mentored new team members on malware analysis, SOC workflows, and hunting methodologies.</li>
+          <li>Conducted security <strong>risk assessments during incidents and malware outbreaks</strong> — evaluating likelihood, impact, and business exposure.</li>
+          <li>Conducted a <strong>seminar for new joiners</strong> on malware analysis and network security with practical demonstrations and real-world use cases.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ CERTS ══════ -->
+<div id="certs" class="section">
+<div class="section-inner">
+  <div class="s-label">// Certifications</div>
+  <h2 class="s-title">Qualifications & <em>Learning</em></h2>
+
+  <div class="certs-grid">
+    <div class="cert-card">
+      <span class="cert-ico">🏅</span>
+      <div class="cert-name">Certified Ethical Hacker</div>
+      <div class="cert-org">EC-COUNCIL · CEH</div>
+    </div>
+    <div class="cert-card blue">
+      <span class="cert-ico">🔗</span>
+      <div class="cert-name">Blockchain Specialization</div>
+      <div class="cert-org">UNIVERSITY OF CALIFORNIA, IRVINE · 2023</div>
+    </div>
+    <div class="cert-card purple">
+      <span class="cert-ico">☁️</span>
+      <div class="cert-name">Cybersecurity in the Cloud</div>
+      <div class="cert-org">UNIVERSITY OF MINNESOTA · 2023</div>
+    </div>
+    <div class="cert-card orange">
+      <span class="cert-ico">🌐</span>
+      <div class="cert-name">Networks & Communications Security</div>
+      <div class="cert-org">ISC2 · 2024</div>
+    </div>
+    <div class="cert-card yellow">
+      <span class="cert-ico">🔐</span>
+      <div class="cert-name">Cryptography & Hashing Overview</div>
+      <div class="cert-org">UC IRVINE · 2023</div>
+    </div>
+    <div class="cert-card blue">
+      <span class="cert-ico">🎯</span>
+      <div class="cert-name">Real-time Cyber Threat Detection</div>
+      <div class="cert-org">COURSERA · ONGOING</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ AWARDS ══════ -->
+<div class="section">
+<div class="section-inner">
+  <div class="s-label">// Recognition</div>
+  <h2 class="s-title">Awards & <em>Achievements</em></h2>
+
+  <div class="awards-grid">
+    <div class="award-card">
+      <span class="award-ico">🏆</span>
+      <div class="award-name">A-Team Award × 2</div>
+      <div class="award-from">LTIMindtree · Leadership & Excellence · Twice Awarded</div>
+    </div>
+    <div class="award-card">
+      <span class="award-ico">⭐</span>
+      <div class="award-name">Best Employee Award</div>
+      <div class="award-from">LTIMindtree · Consistent Performance & Investigative Accuracy</div>
+    </div>
+    <div class="award-card">
+      <span class="award-ico">🚀</span>
+      <div class="award-name">Super Crew Award</div>
+      <div class="award-from">LTIMindtree · Operational Excellence</div>
+    </div>
+    <div class="award-card">
+      <span class="award-ico">💼</span>
+      <div class="award-name">Client Appreciation Award</div>
+      <div class="award-from">LTIMindtree · Client Delivery Excellence</div>
+    </div>
+    <div class="award-card">
+      <span class="award-ico">🎖️</span>
+      <div class="award-name">Crew Team Award</div>
+      <div class="award-from">LTIMindtree · Effective Incident Handling</div>
+    </div>
+    <div class="award-card">
+      <span class="award-ico">📈</span>
+      <div class="award-name">Best Performance Award</div>
+      <div class="award-from">LTIMindtree · SOC Workflow Optimization</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════ CONTACT ══════ -->
+<div id="contact" class="section">
+<div class="section-inner">
+  <div class="s-label">// Get in Touch</div>
+  <h2 class="s-title">Open to <em>Senior Roles</em></h2>
+
+  <div class="contact-wrap">
+    <div class="contact-card">
+      <div class="contact-type">Email</div>
+      <a href="mailto:azzu381@gmail.com" class="contact-val">azzu381@gmail.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-type">Phone</div>
+      <a href="tel:+919642610032" class="contact-val">+91 9642610032</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-type">LinkedIn</div>
+      <a href="https://www.linkedin.com/in/shaikhazaruddin/" target="_blank" class="contact-val">linkedin.com/in/shaikhazaruddin</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-type">Location</div>
+      <span class="contact-val">Hyderabad, India · Open to Relocation</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════ FOOTER ══════ -->
+<hr class="divider">
+<footer>
+  <div>
+    <div class="footer-brand">AZOps</div>
+    <div class="footer-info">Shaik Hazaruddin · Senior Threat Researcher · Hyderabad, India</div>
+  </div>
+  <div class="footer-links">
+    <a href="mailto:azzu381@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/shaikhazaruddin/" target="_blank">LinkedIn</a>
+    <a href="tel:+919642610032">Call</a>
+  </div>
+</footer>
+
+<script>
+// ── Counter Animation ──
+function countUp(el) {
+  const raw = el.dataset.target;
+  const suffix = el.dataset.suffix || '';
+  const isDecimal = raw.includes('.');
+  const target = parseFloat(raw);
+  const duration = 1800;
+  const steps = 60;
+  const inc = target / steps;
+  let cur = 0;
+  const timer = setInterval(() => {
+    cur += inc;
+    if (cur >= target) { cur = target; clearInterval(timer); }
+    el.textContent = (isDecimal ? cur.toFixed(1) : Math.floor(cur)) + suffix;
+  }, duration / steps);
+}
+
+// ── Skill Bar Animation ──
+function animateBars(container) {
+  container.querySelectorAll('.skill-bar').forEach(bar => {
+    const w = bar.dataset.w;
+    bar.style.transform = `scaleX(${w / 100})`;
+  });
+}
+
+// ── Intersection Observer ──
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    // counters
+    e.target.querySelectorAll('[data-target]').forEach(countUp);
+    // skill bars
+    animateBars(e.target);
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.stats-strip, .skills-layout').forEach(el => io.observe(el));
+
+// ── Active nav highlight ──
+const sections = document.querySelectorAll('[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (scrollY >= s.offsetTop - 80) cur = s.id; });
+  navAs.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--green)' : '';
+  });
+}, { passive: true });
+
+// ── Typewriter effect on terminal ──
+document.querySelectorAll('.t-line').forEach((line, i) => {
+  line.style.opacity = '0';
+  line.style.transform = 'translateX(-8px)';
+  setTimeout(() => {
+    line.style.transition = 'all 0.3s ease';
+    line.style.opacity = '1';
+    line.style.transform = 'translateX(0)';
+  }, 400 + i * 80);
+});
+</script>
+</body>
+</html>
